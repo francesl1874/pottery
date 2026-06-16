@@ -6,387 +6,465 @@
     <title>Pottery Journal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #fdf6f3;
+            --surface: #ffffff;
+            --surface-soft: #fbf1ee;
+            --border: #f0e2dd;
+            --border-strong: #e6d2cc;
+            --text: #4a3b40;
+            --text-muted: #998289;
+            --text-faint: #c0adb2;
+            --accent: #c98a99;
+            --accent-hover: #b9758a;
+            --accent-soft: #f8eaee;
+            --radius: 20px;
+            --shadow-sm: 0 2px 8px rgba(150, 110, 120, 0.05);
+            --shadow-md: 0 10px 30px rgba(150, 110, 120, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Lora', serif;
-            background: linear-gradient(135deg, #faf8f3 0%, #f5ede4 100%);
-            color: #2c2416;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            padding: 24px;
+            padding: 32px 28px;
+            -webkit-font-smoothing: antialiased;
         }
-        
+
         h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
+            font-weight: 600;
         }
-        
+
         .container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
         }
-        
+
         header {
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 44px;
         }
-        
+
         header h1 {
-            font-size: 48px;
-            color: #2c2416;
-            margin-bottom: 8px;
-            letter-spacing: -1px;
+            font-family: 'Fraunces', serif;
+            font-size: 44px;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
         }
-        
+
         header p {
-            font-size: 18px;
-            color: #8b7d72;
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
-        
+
         .kanban-board {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
             margin-bottom: 32px;
         }
-        
+
         .column {
-            background: white;
-            border-radius: 16px;
-            border: 2px solid #e8d5c4;
-            padding: 24px;
-            min-height: 600px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 18px;
+            min-height: 720px;
             display: flex;
             flex-direction: column;
         }
-        
+
         .column-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #f0e6d8;
+            gap: 8px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
         }
-        
+
         .column-icon {
-            font-size: 28px;
+            font-size: 14px;
+            opacity: 0.75;
+            flex-shrink: 0;
         }
-        
+
         .column-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c2416;
+            font-family: 'Fraunces', serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: 0.1px;
         }
-        
+
         .column-count {
             margin-left: auto;
-            background: #f0e6d8;
-            padding: 4px 12px;
+            min-width: 22px;
+            text-align: center;
+            padding: 2px 8px;
             border-radius: 20px;
-            font-size: 14px;
-            color: #8b7d72;
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--accent-soft);
             font-weight: 600;
         }
-        
+
+        .col-add-btn {
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-strong);
+            background: var(--surface);
+            color: var(--accent);
+            border-radius: 50%;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .col-add-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
         .cards-container {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            align-content: start;
             overflow-y: auto;
         }
-        
+
         .card {
-            background: linear-gradient(135deg, #faf8f3 0%, #f5ede4 100%);
-            border: 1.5px solid #e8d5c4;
-            border-radius: 12px;
-            padding: 16px;
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0;
             cursor: grab;
-            transition: all 0.3s ease;
+            overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
             display: flex;
             flex-direction: column;
-            gap: 12px;
         }
-        
+
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(201, 149, 111, 0.15);
-            border-color: #d4c4b0;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
         }
-        
+
         .card:active {
             cursor: grabbing;
         }
-        
+
         .card-image {
             width: 100%;
-            height: 180px;
-            background: linear-gradient(135deg, #e8d5c4 0%, #d4c4b0 100%);
-            border-radius: 8px;
+            aspect-ratio: 3 / 4;
+            background: var(--surface-soft);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 26px;
+            color: var(--text-faint);
             overflow: hidden;
             position: relative;
         }
-        
+
         .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
-        .card-image.empty {
-            color: #c9956f;
-        }
-        
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2c2416;
-            word-break: break-word;
-        }
-        
-        .card-description {
-            font-size: 13px;
-            color: #8b7d72;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-        
-        .card-dates {
-            font-size: 12px;
-            color: #a89d92;
+
+        .card-body {
+            padding: 7px 9px 9px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
-        
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
         .card-date {
-            display: flex;
-            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
         }
-        
+
         .card-actions {
+            position: absolute;
+            top: 6px;
+            right: 6px;
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 4px;
+            z-index: 2;
         }
-        
-        .btn-small {
-            flex: 1;
-            padding: 6px 12px;
+
+        .icon-btn {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border: none;
-            border-radius: 6px;
-            font-family: 'Lora', serif;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 1px 4px rgba(74, 59, 64, 0.18);
+            border-radius: 50%;
             font-size: 12px;
+            line-height: 1;
+            color: var(--text);
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
+            transition: all 0.15s ease;
+            padding: 0;
         }
-        
-        .btn-edit {
-            background: #c9956f;
-            color: white;
+
+        .icon-btn:hover {
+            background: #ffffff;
+            transform: scale(1.08);
         }
-        
-        .btn-edit:hover {
-            background: #b8845f;
+
+        .icon-btn.btn-next {
+            background: var(--accent);
+            color: #fff;
         }
-        
-        .btn-delete {
-            background: #e8d5c4;
-            color: #8b4513;
+
+        .icon-btn.btn-next:hover {
+            background: var(--accent-hover);
         }
-        
-        .btn-delete:hover {
-            background: #d4c4b0;
+
+        .icon-btn.btn-delete:hover {
+            color: #b3261e;
         }
-        
+
         .add-card-btn {
             width: 100%;
-            padding: 12px;
-            background: #f0e6d8;
-            border: 2px dashed #d4c4b0;
-            border-radius: 8px;
-            font-family: 'Lora', serif;
-            font-size: 14px;
-            color: #8b7d72;
+            padding: 9px;
+            background: transparent;
+            border: 1px dashed var(--border-strong);
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 12px;
+            color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.18s ease;
             font-weight: 600;
-            margin-top: auto;
+            margin-top: 14px;
         }
-        
+
         .add-card-btn:hover {
-            background: #e8d5c4;
-            border-color: #c9956f;
-            color: #c9956f;
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: var(--accent);
         }
-        
+
         /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            inset: 0;
+            background: rgba(33, 31, 28, 0.4);
+            backdrop-filter: blur(2px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal.active {
             display: flex;
         }
-        
+
         .modal-content {
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
-            padding: 32px;
-            max-width: 500px;
+            padding: 28px;
+            max-width: 460px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 24px 60px rgba(33, 31, 28, 0.25);
         }
-        
+
         .modal-header {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: #2c2416;
+            font-family: 'Fraunces', serif;
+            font-size: 26px;
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 22px;
+            color: var(--text);
         }
-        
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             display: flex;
             flex-direction: column;
         }
-        
+
         .form-group label {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c2416;
+            margin-bottom: 7px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
-        
+
         .form-group input,
         .form-group textarea,
         .form-group select {
-            padding: 12px;
-            border: 1.5px solid #e8d5c4;
+            padding: 10px 12px;
+            border: 1px solid var(--border-strong);
             border-radius: 8px;
-            font-family: 'Lora', serif;
+            font-family: inherit;
             font-size: 14px;
-            color: #2c2416;
-            transition: all 0.3s ease;
+            color: var(--text);
+            background: var(--surface);
+            transition: all 0.18s ease;
         }
-        
+
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #c9956f;
-            box-shadow: 0 0 0 3px rgba(201, 149, 111, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(176, 106, 79, 0.12);
         }
-        
+
+        .form-group input[type="file"] {
+            padding: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
         }
-        
+
         .image-preview {
             width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #f5ede4 0%, #e8d5c4 100%);
-            border-radius: 8px;
+            height: 180px;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             overflow: hidden;
-            font-size: 48px;
+            font-size: 36px;
+            color: var(--text-faint);
         }
-        
+
         .image-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .modal-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 32px;
+            gap: 10px;
+            margin-top: 26px;
         }
-        
+
         .btn {
             flex: 1;
             padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Lora', serif;
-            font-size: 16px;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.18s ease;
         }
-        
+
         .btn-primary {
-            background: #c9956f;
-            color: white;
+            background: var(--accent);
+            color: #fff;
         }
-        
+
         .btn-primary:hover {
-            background: #b8845f;
+            background: var(--accent-hover);
         }
-        
+
         .btn-secondary {
-            background: #f0e6d8;
-            color: #8b7d72;
+            background: var(--surface);
+            color: var(--text-muted);
+            border-color: var(--border-strong);
         }
-        
+
         .btn-secondary:hover {
-            background: #e8d5c4;
+            background: var(--surface-soft);
+            color: var(--text);
         }
-        
+
         .empty-state {
+            grid-column: 1 / -1;
             text-align: center;
-            padding: 40px 20px;
-            color: #a89d92;
+            padding: 28px 16px;
+            color: var(--text-faint);
         }
-        
+
         .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 22px;
+            margin-bottom: 10px;
+            opacity: 0.6;
         }
-        
+
         .empty-state-text {
-            font-size: 14px;
+            font-size: 12px;
         }
-        
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 32px;
+
+        @media (max-width: 1100px) {
+            .kanban-board {
+                grid-template-columns: repeat(2, 1fr);
             }
-            
+            .column {
+                min-height: 420px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 16px;
+            }
+            header {
+                flex-direction: column;
+                gap: 4px;
+            }
             .kanban-board {
                 grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                padding: 24px;
             }
         }
     </style>
@@ -394,139 +472,139 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎨 Pottery Journal</h1>
+            <h1>Pottery Journal</h1>
             <p>Track your ceramic pieces through every stage of creation</p>
         </header>
-        
+
         <div class="kanban-board">
             <div class="column" id="thrown">
                 <div class="column-header">
                     <span class="column-icon">🎯</span>
                     <span class="column-title">Thrown</span>
                     <span class="column-count" id="count-thrown">0</span>
+                    <button class="col-add-btn" title="Add to Thrown" onclick="openModal('thrown')">+</button>
                 </div>
                 <div class="cards-container" id="cards-thrown"></div>
-                <button class="add-card-btn" onclick="openModal('thrown')">+ Add Piece</button>
             </div>
-            
+
             <div class="column" id="trimmed">
                 <div class="column-header">
                     <span class="column-icon">✂️</span>
                     <span class="column-title">Trimmed</span>
                     <span class="column-count" id="count-trimmed">0</span>
+                    <button class="col-add-btn" title="Add to Trimmed" onclick="openModal('trimmed')">+</button>
                 </div>
                 <div class="cards-container" id="cards-trimmed"></div>
-                <button class="add-card-btn" onclick="openModal('trimmed')">+ Add Piece</button>
             </div>
-            
+
             <div class="column" id="bisque">
                 <div class="column-header">
                     <span class="column-icon">🔥</span>
                     <span class="column-title">Bisque Fired</span>
                     <span class="column-count" id="count-bisque">0</span>
+                    <button class="col-add-btn" title="Add to Bisque Fired" onclick="openModal('bisque')">+</button>
                 </div>
                 <div class="cards-container" id="cards-bisque"></div>
-                <button class="add-card-btn" onclick="openModal('bisque')">+ Add Piece</button>
             </div>
-            
+
             <div class="column" id="glazed">
                 <div class="column-header">
                     <span class="column-icon">🎨</span>
                     <span class="column-title">Glazed</span>
                     <span class="column-count" id="count-glazed">0</span>
+                    <button class="col-add-btn" title="Add to Glazed" onclick="openModal('glazed')">+</button>
                 </div>
                 <div class="cards-container" id="cards-glazed"></div>
-                <button class="add-card-btn" onclick="openModal('glazed')">+ Add Piece</button>
             </div>
-            
+
             <div class="column" id="fired">
                 <div class="column-header">
                     <span class="column-icon">✨</span>
                     <span class="column-title">Glaze Fired</span>
                     <span class="column-count" id="count-fired">0</span>
+                    <button class="col-add-btn" title="Add to Glaze Fired" onclick="openModal('fired')">+</button>
                 </div>
                 <div class="cards-container" id="cards-fired"></div>
-                <button class="add-card-btn" onclick="openModal('fired')">+ Add Piece</button>
             </div>
         </div>
     </div>
-    
+
     <!-- Add/Edit Modal -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header" id="modal-title">Add New Piece</div>
-            
+
             <div class="image-preview" id="image-preview">
                 <span>📸</span>
             </div>
-            
+
             <div class="form-group">
                 <label>Upload Image</label>
                 <input type="file" id="image-input" accept="image/*" onchange="previewImage()">
             </div>
-            
+
             <div class="form-group">
-                <label>Piece Name *</label>
+                <label>Title (optional)</label>
                 <input type="text" id="piece-name" placeholder="e.g., Thrown Bowl">
             </div>
-            
+
             <div class="form-group">
                 <label>Description</label>
                 <textarea id="piece-description" placeholder="Add notes about your piece..."></textarea>
             </div>
-            
+
             <div class="form-group">
                 <label>Date</label>
                 <input type="date" id="piece-date">
             </div>
-            
 
-            
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="savePiece()">Save Piece</button>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Initialize data from localStorage
         let pieces = JSON.parse(localStorage.getItem('pottery-pieces')) || [];
         let currentColumn = null;
         let editingId = null;
-        
+
         const columns = ['thrown', 'trimmed', 'bisque', 'glazed', 'fired'];
-        
+
         function renderBoard() {
             columns.forEach(column => {
                 const columnPieces = pieces.filter(p => p.column === column);
                 const container = document.getElementById(`cards-${column}`);
                 const count = document.getElementById(`count-${column}`);
-                
+
                 count.textContent = columnPieces.length;
-                
+
                 if (columnPieces.length === 0) {
                     container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">No pieces yet</div></div>';
                 } else {
                     container.innerHTML = columnPieces.map(piece => `
                         <div class="card" draggable="true" ondragstart="dragStart(event, '${piece.id}')" ondragend="dragEnd(event)">
-                            <div class="card-image ${!piece.image ? 'empty' : ''}">
-                                ${piece.image ? `<img src="${piece.image}" alt="${piece.name}">` : '🎨'}
+                            <div class="card-image">
+                                ${piece.image ? `<img src="${piece.image}" alt="${piece.name || 'pottery piece'}">` : '🏺'}
                             </div>
-                            <div class="card-title">${piece.name}</div>
-                            ${piece.description ? `<div class="card-description">${piece.description}</div>` : ''}
-                            ${piece.date ? `<div class="card-dates"><div class="card-date"><span>📅</span><span>${piece.date}</span></div></div>` : ''}
                             <div class="card-actions">
-                                ${column !== 'fired' ? `<button class="btn-small btn-edit" onclick="moveToNext('${piece.id}')">→ Next</button>` : ''}
-                                <button class="btn-small btn-edit" onclick="editPiece('${piece.id}')">Edit</button>
-                                <button class="btn-small btn-delete" onclick="deletePiece('${piece.id}')">Delete</button>
+                                ${column !== 'fired' ? `<button class="icon-btn btn-next" title="Move to next stage" onclick="moveToNext('${piece.id}')">→</button>` : ''}
+                                <button class="icon-btn" title="Edit" onclick="editPiece('${piece.id}')">✎</button>
+                                <button class="icon-btn btn-delete" title="Delete" onclick="deletePiece('${piece.id}')">✕</button>
                             </div>
+                            ${(piece.name || piece.date) ? `
+                            <div class="card-body">
+                                ${piece.name ? `<div class="card-title">${piece.name}</div>` : ''}
+                                ${piece.date ? `<div class="card-date">${piece.date}</div>` : ''}
+                            </div>` : ''}
                         </div>
                     `).join('');
                 }
             });
         }
-        
+
         function openModal(column) {
             currentColumn = column;
             editingId = null;
@@ -538,33 +616,33 @@
             document.getElementById('image-preview').innerHTML = '<span>📸</span>';
             document.getElementById('modal').classList.add('active');
         }
-        
+
         function editPiece(id) {
             const piece = pieces.find(p => p.id === id);
             if (!piece) return;
-            
+
             editingId = id;
             currentColumn = piece.column;
             document.getElementById('modal-title').textContent = 'Edit Piece';
             document.getElementById('piece-name').value = piece.name;
             document.getElementById('piece-description').value = piece.description || '';
             document.getElementById('piece-date').value = piece.date || '';
-            
+
             if (piece.image) {
                 document.getElementById('image-preview').innerHTML = `<img src="${piece.image}" alt="${piece.name}">`;
             } else {
                 document.getElementById('image-preview').innerHTML = '<span>📸</span>';
             }
-            
+
             document.getElementById('modal').classList.add('active');
         }
-        
+
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             currentColumn = null;
             editingId = null;
         }
-        
+
         function previewImage() {
             const file = document.getElementById('image-input').files[0];
             if (file) {
@@ -575,18 +653,13 @@
                 reader.readAsDataURL(file);
             }
         }
-        
+
         function savePiece() {
             const name = document.getElementById('piece-name').value.trim();
-            if (!name) {
-                alert('Please enter a piece name');
-                return;
-            }
-            
             const imageInput = document.getElementById('image-input');
             const description = document.getElementById('piece-description').value;
             const date = document.getElementById('piece-date').value;
-            
+
             if (editingId) {
                 // Update existing piece
                 const piece = pieces.find(p => p.id === editingId);
@@ -595,7 +668,7 @@
                     piece.description = description;
                     piece.date = date;
                     piece.column = currentColumn;
-                    
+
                     if (imageInput.files[0]) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
@@ -621,7 +694,7 @@
                     column: currentColumn,
                     image: null
                 };
-                
+
                 if (imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
@@ -640,7 +713,7 @@
                 }
             }
         }
-        
+
         function deletePiece(id) {
             if (confirm('Are you sure you want to delete this piece?')) {
                 pieces = pieces.filter(p => p.id !== id);
@@ -648,35 +721,35 @@
                 renderBoard();
             }
         }
-        
+
         function moveToNext(id) {
             const piece = pieces.find(p => p.id === id);
             if (!piece) return;
-            
+
             const columnOrder = ['thrown', 'trimmed', 'bisque', 'glazed', 'fired'];
             const currentIndex = columnOrder.indexOf(piece.column);
-            
+
             if (currentIndex < columnOrder.length - 1) {
                 piece.column = columnOrder[currentIndex + 1];
                 saveToDB();
                 renderBoard();
             }
         }
-        
+
         function dragStart(e, id) {
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('pieceId', id);
         }
-        
+
         function dragEnd(e) {
             e.preventDefault();
         }
-        
+
         function allowDrop(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
         }
-        
+
         function drop(e, column) {
             e.preventDefault();
             const pieceId = e.dataTransfer.getData('pieceId');
@@ -687,26 +760,26 @@
                 renderBoard();
             }
         }
-        
+
         function saveToDB() {
             localStorage.setItem('pottery-pieces', JSON.stringify(pieces));
         }
-        
+
         // Add drag and drop to columns
         columns.forEach(column => {
             const container = document.getElementById(`cards-${column}`);
             container.ondragover = allowDrop;
             container.ondrop = (e) => drop(e, column);
         });
-        
+
         // Close modal on background click
         document.getElementById('modal').addEventListener('click', (e) => {
             if (e.target.id === 'modal') closeModal();
         });
-        
+
         // Set today's date by default
         document.getElementById('piece-date').value = new Date().toISOString().split('T')[0];
-        
+
         // Initial render
         renderBoard();
     </script>
