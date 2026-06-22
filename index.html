@@ -643,14 +643,36 @@
             editingId = null;
         }
 
+        // Downscale + compress an image file to keep localStorage well under quota
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const maxDim = 1200;
+                    let { width, height } = img;
+                    if (width > maxDim || height > maxDim) {
+                        const scale = Math.min(maxDim / width, maxDim / height);
+                        width = Math.round(width * scale);
+                        height = Math.round(height * scale);
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         function previewImage() {
             const file = document.getElementById('image-input').files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('image-preview').innerHTML = `<img src="${e.target.result}" alt="preview">`;
-                };
-                reader.readAsDataURL(file);
+                compressImage(file, (dataUrl) => {
+                    document.getElementById('image-preview').innerHTML = `<img src="${dataUrl}" alt="preview">`;
+                });
             }
         }
 
@@ -670,17 +692,13 @@
                     piece.column = currentColumn;
 
                     if (imageInput.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            piece.image = e.target.result;
-                            saveToDB();
-                            renderBoard();
+                        compressImage(imageInput.files[0], (dataUrl) => {
+                            piece.image = dataUrl;
+                            if (saveToDB()) renderBoard();
                             closeModal();
-                        };
-                        reader.readAsDataURL(imageInput.files[0]);
+                        });
                     } else {
-                        saveToDB();
-                        renderBoard();
+                        if (saveToDB()) renderBoard();
                         closeModal();
                     }
                 }
@@ -696,19 +714,15 @@
                 };
 
                 if (imageInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        newPiece.image = e.target.result;
+                    compressImage(imageInput.files[0], (dataUrl) => {
+                        newPiece.image = dataUrl;
                         pieces.push(newPiece);
-                        saveToDB();
-                        renderBoard();
+                        if (saveToDB()) renderBoard();
                         closeModal();
-                    };
-                    reader.readAsDataURL(imageInput.files[0]);
+                    });
                 } else {
                     pieces.push(newPiece);
-                    saveToDB();
-                    renderBoard();
+                    if (saveToDB()) renderBoard();
                     closeModal();
                 }
             }
@@ -762,7 +776,13 @@
         }
 
         function saveToDB() {
-            localStorage.setItem('pottery-pieces', JSON.stringify(pieces));
+            try {
+                localStorage.setItem('pottery-pieces', JSON.stringify(pieces));
+                return true;
+            } catch (err) {
+                alert('Could not save — your browser storage is full. Try deleting a few pieces or re-adding their photos (newer photos are automatically compressed).');
+                return false;
+            }
         }
 
         // Add drag and drop to columns
